@@ -69,7 +69,7 @@ function mostrarProductosSuperEmePe(){
         })
 
         li.appendChild(primerDiv)
-        li.appendChild(btn) dsa
+        li.appendChild(btn)
         listaSuper.appendChild(li)
     })
 }
