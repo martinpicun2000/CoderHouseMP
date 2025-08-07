@@ -1,16 +1,22 @@
-//objeto de productos
-const productos = [ 
-  {prod_id: 1, precio:60, nombre:"Arroz"},
-  {prod_id: 2, precio:65, nombre:"Fideos"},
-  {prod_id: 3, precio:30, nombre:"Agua"},
-  {prod_id: 4, precio:90, nombre:"Chocolate"},
-  {prod_id: 5, precio:70, nombre:"Aceite"},
-  {prod_id: 6, precio:240, nombre:"Huevos"},
-  {prod_id: 7, precio:37, nombre:"Harina"},
-  {prod_id: 8, precio:190, nombre:"Coca-Cola"},
-  {prod_id: 9, precio:83, nombre:"Tomates"}
-]
-//#121212
+//Defino el array de producto
+//const productos = [{}]
+
+
+let productos = []
+
+const traerProductos = ()=>{
+  try {
+    const productosFetch = fetch("./lista.json")
+    productosFetch.then((respuesta)=>{
+      return respuesta.json()
+    }).then(rta=>{
+      productos = rta
+      mostrarProductosSuperEmePe()
+    })
+  } catch (error) {
+    console.warn("No se cargaron los productos")
+  }}
+
 // Obtener objetos de HTML
 const listaSuper = document.getElementById("listaSuper")
 const listarCarrito = document.getElementById("listaCarritoCompras")
@@ -63,9 +69,13 @@ function mostrarProductosSuperEmePe(){
         const btn = document.createElement("button")
         li.id = prod.prod_id
         primerDiv.innerText = `${prod.nombre} - $${prod.precio}`
-        btn.innerText = "Comprar"
+        btn.innerText = "Agregar"
         btn.addEventListener("click", ()=>{
             agregarCarritoCompra(prod)
+            Toastify({
+                text: "Producto agregado al carrito",
+                duration: 3000
+            }).showToast();
         })
 
         li.appendChild(primerDiv)
@@ -82,11 +92,19 @@ const vaciarCarritoCompra = () => {
 }
 
 const comprar = () => {
-    const agradecimmiento = document.getElementById("Despedida")
-    agradecimmiento.innerText = "Gracias por comprar en Eme Pe!!"
     guardarCarrito()
     vaciarCarritoCompra()
     mostrarTotalCompra()
+    Swal.fire({
+        icon: "success",
+        title: "Compra Realizada!",
+        text: "Gracias por comprar en Eme Pe!!"
+    });
+    const agradecimmiento = document.getElementById("Despedida")
+    agradecimmiento.innerText = "Gracias por comprar en Eme Pe!"
+    agradecimmiento = setTimeout(()=>{
+        agradecimmiento.innerText = ""
+    }, 3000)
 }
 
 botonComprar.onclick = comprar
@@ -94,4 +112,7 @@ btnDarkMode.addEventListener("click", ()=>{
             document.body.classList.toggle("darkmode")
         })
 
+
+//Ejecuto la operacion
+traerProductos()
 mostrarProductosSuperEmePe()
